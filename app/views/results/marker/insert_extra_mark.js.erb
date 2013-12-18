@@ -1,6 +1,6 @@
-jQuery('#add_extra_mark_prompt').replaceWith("<%= escape_javascript(
+jQuery('#add_extra_mark_prompt').html("<%= escape_javascript(
      render :partial => 'results/marker/extra_mark',
             :locals => {:extra_mark => @extra_mark}).html_safe %>");
-jQuery('#total_extra_points').replaceWith(
+jQuery('#total_extra_points').html(
         "<%= escape_javascript(@result.get_total_extra_points).html_safe %>");
 update_total_mark(<%= escape_javascript(@result.total_mark).html_safe %>);
