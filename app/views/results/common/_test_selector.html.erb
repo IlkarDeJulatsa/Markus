@@ -6,7 +6,7 @@
      assignment_automated_tests_path(:assignment_id => @assignment.id, :result => @result), :id => "test_select_link", :remote => true %>
 
     <script type='text/javascript'>
-		JQuery('#test_select_link').bind('ajax:after', function(evt, status, data, xhr) {
+		jQuery('#test_select_link').bind('ajax:after', function(evt, status, data, xhr) {
       jQuery('#running_tests').show();
     });
 	
@@ -28,7 +28,9 @@
       <% end %>
     <% end %>
   </select>
-  <input type="button" onclick="if (jQuery('#select_test_result_id').val() != '') { load_test_result(jQuery('#select_test_result_id').val()); }"
+  <input type="button"
+         onclick="if (jQuery('#select_test_result_id').val() != ''){
+                   load_test_result(jQuery('#select_test_result_id').val()); }"
       value="<%= I18n.t("test_result.button.load")%>" />
   <span id="loading_test_result" style="display:none;">
     <%= image_tag('spinner.gif') %> <%= I18n.t("test_result.loading_results") %>

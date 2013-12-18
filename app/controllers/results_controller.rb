@@ -25,6 +25,7 @@ class ResultsController < ApplicationController
     else
       flash[:fail_notice] = I18n.t('notes.error')
     end
+  render 'note_message.js'
   end
 
   def edit
@@ -147,6 +148,7 @@ class ResultsController < ApplicationController
       m_logger.log("Marks unreleased for assignment '#{assignment.short_identifier}', ID: '" +
                    "#{assignment.id}' (for 1 group).")
     end
+  render 'set_released_to_students.js'
   end
 
   #Updates the marking state
@@ -158,10 +160,10 @@ class ResultsController < ApplicationController
       if params[:value] == Result::MARKING_STATES[:complete]
         @result.submission.assignment.assignment_stat.refresh_grade_distribution
       end
-      render :template => 'results/update_marking_state'
+      render :template => 'results/update_marking_state.js'
     else # Failed to pass validations
       # Show error message
-      render :template => 'results/marker/show_result_error'
+      render :template => 'results/marker/show_result_error.js'
     end
   end
 
@@ -337,11 +339,11 @@ class ResultsController < ApplicationController
         m_logger.log("User '#{current_user.user_name}' updated mark for submission (id: " +
                          "#{submission.id}) of assignment '#{assignment.short_identifier}' for group" +
                          " '#{group.group_name}'.", MarkusLogger::INFO)
-        render :partial => 'results/marker/update_mark',
+        render :partial => 'results/marker/update_mark.js',
                :locals => { :result_mark => result_mark, :mark_value => result_mark.mark}
       end
     else
-      render :partial => 'results/marker/mark_verify_result',
+      render :partial => 'results/marker/mark_verify_result.js',
              :locals => {:mark_id => result_mark.id,
                          :mark_error => result_mark.errors.full_messages.join}
     end
@@ -422,13 +424,13 @@ class ResultsController < ApplicationController
       if @extra_mark.update_attributes(params[:extra_mark])
         # need to re-calculate total mark
         @result.update_total_mark
-        render :template => 'results/marker/insert_extra_mark'
+        render :template => 'results/marker/insert_extra_mark.js'
       else
-        render :template => 'results/marker/add_extra_mark_error'
+        render :template => 'results/marker/add_extra_mark_error.js'
       end
       return
     end
-    render :template => 'results/marker/add_extra_mark'
+    render :template => 'results/marker/add_extra_mark.js'
   end
 
   #Deletes an extra mark from the database and removes it from the html
@@ -439,19 +441,21 @@ class ResultsController < ApplicationController
     #need to recalculate total mark
     @result = @extra_mark.result
     @result.update_total_mark
-    render :template => 'results/marker/remove_extra_mark'
+    render :template => 'results/marker/remove_extra_mark.js'
   end
 
   def update_overall_comment
     @result = Result.find(params[:id])
     @result.overall_comment = params[:result][:overall_comment]
     @result.save
+		render 'update_overall_comment.js'
   end
 
   def update_overall_remark_comment
     @result = Result.find(params[:id])
     @result.overall_comment = params[:result][:overall_comment]
     @result.save
+		render 'update_overall_remark_comment.js'
   end
 
   def update_remark_request
@@ -473,6 +477,7 @@ class ResultsController < ApplicationController
         @old_result.save
       end
     end
+		render 'update_remark_request.js'
   end
 
   def cancel_remark_request
@@ -498,14 +503,14 @@ class ResultsController < ApplicationController
   def expand_criteria
     @assignment = Assignment.find(params[:assignment_id])
     @mark_criteria = @assignment.get_criteria
-    render :partial => 'results/marker/expand_criteria',
+    render :partial => 'results/marker/expand_criteria.js',
            :locals => {:mark_criteria => @mark_criteria}
   end
 
   def collapse_criteria
     @assignment = Assignment.find(params[:assignment_id])
     @mark_criteria = @assignment.get_criteria
-    render :partial => 'results/marker/collapse_criteria', :locals => {:mark_criteria => @mark_criteria}
+    render :partial => 'results/marker/collapse_criteria.js', :locals => {:mark_criteria => @mark_criteria}
   end
 
   def expand_unmarked_criteria
@@ -514,13 +519,14 @@ class ResultsController < ApplicationController
     # nil_marks are the marks that have a "nil" value for Mark.mark - so they're
     # unmarked.
     @nil_marks = @result.marks.all(:conditions => {:mark => nil})
-    render :partial => 'results/marker/expand_unmarked_criteria', :locals => {:nil_marks => @nil_marks}
+    render :partial => 'results/marker/expand_unmarked_criteria.js', :locals => {:nil_marks => @nil_marks}
   end
 
   def delete_grace_period_deduction
     @grouping = Grouping.find(params[:id])
     grace_deduction = GracePeriodDeduction.find(params[:deduction_id])
     grace_deduction.destroy
+    render 'delete_grace_period_deduction.js'
   end
 
   private
