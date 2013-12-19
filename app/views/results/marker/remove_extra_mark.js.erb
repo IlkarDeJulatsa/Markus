@@ -1,4 +1,4 @@
-jQuery('#<%= escape_javascript(extra_mark_#{@extra_mark.id}).html_safe %>').
+jQuery('#<%= escape_javascript(extra_mark_#{@extra_mark.id}.to_s).html_safe %>').
 jQuery('#current_total_mark_div').html(
       "<%= escape_javascript(@result.total_mark).html_safe %>");
 jQuery('#total_extra_points').html(

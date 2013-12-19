@@ -1,4 +1,4 @@
-jQuery('#<%= escape_javascript(mark_verify_result_#{mark_id}).html_safe %>').show();
-jQuery('#<%= escape_javascript(mark_verify_result_#{mark_id}).html_safe %>').html(
+jQuery('#<%= escape_javascript(mark_verify_result_#{mark_id}.to_s)).html_safe %>').show();
+jQuery('#<%= escape_javascript(mark_verify_result_#{mark_id}.to_s)).html_safe %>').html(
      "<%= escape_javascript(mark_error.to_s).html_safe %>");
 
